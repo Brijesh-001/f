@@ -1,0 +1,33 @@
+db.employees.insertMany([
+  { name: "Aarav", dept: "CSE", salary: 90000 },
+  { name: "Riya", dept: "CSE", salary: 85000 },
+  { name: "Karan", dept: "CSE", salary: 75000 },
+  { name: "Mehul", dept: "CSE", salary: 70000 },
+
+  { name: "Priya", dept: "ECE", salary: 95000 },
+  { name: "Tanya", dept: "ECE", salary: 87000 },
+  { name: "Aditi", dept: "ECE", salary: 82000 },
+  { name: "Harsh", dept: "ECE", salary: 60000 }
+])
+
+
+db.employees.aggregate([
+  {
+    $sort: { dept: 1, salary: -1 }
+  },
+  {
+    $group: {
+      _id: "$dept",
+      topEmployees: {
+        $push: { name: "$name", salary: "$salary" }
+      }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      dept: "$_id",
+      topEmployees: { $slice: ["$topEmployees", 3] }
+    }
+  }
+]);

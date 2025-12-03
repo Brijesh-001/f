@@ -1,0 +1,62 @@
+//-------------------------------------------
+// 1) CREATE / SWITCH TO DATABASE
+//-------------------------------------------
+use studentDB;
+
+
+//-------------------------------------------
+// 2) CREATE COLLECTIONS
+//-------------------------------------------
+db.createCollection("students");
+db.createCollection("departments");
+
+
+//-------------------------------------------
+// 3) INSERT SAMPLE DATA
+//-------------------------------------------
+
+// STUDENTS COLLECTION
+db.students.insertMany([
+  { roll: 1, name: "Aarav", dept: "CSE", marks: 85 },
+  { roll: 2, name: "Riya", dept: "CSE", marks: 92 },
+  { roll: 3, name: "Manish", dept: "ECE", marks: 78 },
+  { roll: 4, name: "Aditi", dept: "ECE", marks: 88 },
+  { roll: 5, name: "Karan", dept: "MECH", marks: 69 }
+]);
+
+// DEPARTMENTS COLLECTION
+db.departments.insertMany([
+  { dept: "CSE", hod: "Dr. Sharma", building: "Block A" },
+  { dept: "ECE", hod: "Dr. Rao",    building: "Block B" },
+  { dept: "MECH", hod: "Dr. Verma", building: "Block C" }
+]);
+
+
+//-------------------------------------------
+// 4) JOIN STUDENTS WITH DEPARTMENTS
+// Using $lookup (MongoDB JOIN)
+//-------------------------------------------
+print("\n--- STUDENTS WITH THEIR DEPARTMENT DETAILS (JOIN) ---");
+
+db.students.aggregate([
+  {
+    $lookup: {
+      from: "departments",      // join with departments collection
+      localField: "dept",        // field from students
+      foreignField: "dept",      // matching field from departments
+      as: "departmentDetails"    // output array
+    }
+  },
+  { $unwind: "$departmentDetails" },  // convert array → object
+  {
+    $project: {
+      _id: 0,
+      roll: 1,
+      name: 1,
+      dept: 1,
+      marks: 1,
+      hod: "$departmentDetails.hod",
+      building: "$departmentDetails.building"
+    }
+  }
+]).forEach(doc => printjson(doc));

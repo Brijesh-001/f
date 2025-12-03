@@ -1,0 +1,61 @@
+//-------------------------------------------
+// 1) CREATE / SWITCH TO DATABASE
+//-------------------------------------------
+use companyDB;
+
+
+//-------------------------------------------
+// 2) CREATE A COLLECTION
+//-------------------------------------------
+db.createCollection("employees");
+
+
+//-------------------------------------------
+// 3) INSERT DATA USING insertOne()
+//-------------------------------------------
+print("\n--- INSERTING ONE DOCUMENT ---");
+
+db.employees.insertOne({
+  name: "Aarav",
+  dept: "CSE",
+  salary: 70000
+});
+
+
+//-------------------------------------------
+// 4) INSERT MULTIPLE DATA (OPTIONAL)
+//-------------------------------------------
+db.employees.insertMany([
+  { name: "Riya", dept: "ECE", salary: 65000 },
+  { name: "Manish", dept: "IT", salary: 55000 }
+]);
+
+
+//-------------------------------------------
+// 5) UPDATE A DOCUMENT USING updateOne()
+//-------------------------------------------
+print("\n--- UPDATING ONE DOCUMENT ---");
+
+// Example: update salary of Aarav
+db.employees.updateOne(
+  { name: "Aarav" },          // filter
+  { $set: { salary: 80000 } } // update
+);
+
+
+//-------------------------------------------
+// 6) DELETE A DOCUMENT USING deleteOne()
+//-------------------------------------------
+print("\n--- DELETING ONE DOCUMENT ---");
+
+// Example: delete employee named Manish
+db.employees.deleteOne(
+  { name: "Manish" }          // filter
+);
+
+
+//-------------------------------------------
+// 7) DISPLAY FINAL DATA
+//-------------------------------------------
+print("\n--- FINAL DATA IN employees COLLECTION ---");
+db.employees.find().forEach(doc => printjson(doc));

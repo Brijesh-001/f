@@ -1,0 +1,91 @@
+ Complete App.js — Student Dashboard with Cards
+import React from "react";
+import "./App.css";
+
+// Student Card Component
+function StudentCard({ name, age, course, image }) {
+  return (
+    <div className="card">
+      <img src={image} alt="student" className="student-img" />
+      <h2>{name}</h2>
+      <p><strong>Age:</strong> {age}</p>
+      <p><strong>Course:</strong> {course}</p>
+    </div>
+  );
+}
+
+// Main App Component
+function App() {
+  const students = [
+    {
+      id: 1,
+      name: "Aarav Sharma",
+      age: 20,
+      course: "Computer Science",
+      image: "https://via.placeholder.com/120"
+    },
+    {
+      id: 2,
+      name: "Priya Patel",
+      age: 22,
+      course: "Electronics Engineering",
+      image: "https://via.placeholder.com/120"
+    },
+    {
+      id: 3,
+      name: "Rahul Mehta",
+      age: 21,
+      course: "Mechanical Engineering",
+      image: "https://via.placeholder.com/120"
+    }
+  ];
+
+  return (
+    <div className="container">
+      <h1>Student Dashboard</h1>
+
+      <div className="card-container">
+        {students.map((student) => (
+          <StudentCard
+            key={student.id}
+            name={student.name}
+            age={student.age}
+            course={student.course}
+            image={student.image}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
+App.css (Paste this inside App.css)
+.container {
+  text-align: center;
+  padding: 40px;
+}
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 220px;
+  background: #f7f7f7;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.student-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+}

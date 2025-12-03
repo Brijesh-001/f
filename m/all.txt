@@ -1,0 +1,54 @@
+//-------------------------------------------
+// 1) CREATE / SWITCH TO DATABASE
+//-------------------------------------------
+use employeeDB;
+
+
+//-------------------------------------------
+// 2) CREATE COLLECTION
+//-------------------------------------------
+db.createCollection("employees");
+
+
+//-------------------------------------------
+// 3) INSERT SAMPLE DATA
+//-------------------------------------------
+db.employees.insertMany([
+  { name: "Aarav", dept: "CSE", salary: 70000 },
+  { name: "Riya", dept: "CSE", salary: 85000 },
+  { name: "Mehul", dept: "CSE", salary: 65000 },
+
+  { name: "Aditi", dept: "ECE", salary: 90000 },
+  { name: "Tanya", dept: "ECE", salary: 75000 },
+  { name: "Harsh", dept: "ECE", salary: 82000 },
+
+  { name: "Karan", dept: "MECH", salary: 60000 },
+  { name: "Sarthak", dept: "MECH", salary: 72000 },
+  { name: "Neha", dept: "MECH", salary: 68000 }
+]);
+
+
+//-------------------------------------------
+// 4) AGGREGATION: AVG, MIN, MAX SALARY PER DEPT
+//-------------------------------------------
+print("\n--- SALARY SUMMARY BY DEPARTMENT ---");
+
+db.employees.aggregate([
+  {
+    $group: {
+      _id: "$dept",
+      averageSalary: { $avg: "$salary" },
+      minSalary: { $min: "$salary" },
+      maxSalary: { $max: "$salary" }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      department: "$_id",
+      averageSalary: 1,
+      minSalary: 1,
+      maxSalary: 1
+    }
+  }
+]).forEach(doc => printjson(doc));

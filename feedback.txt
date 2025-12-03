@@ -1,0 +1,72 @@
+import React, { useState } from "react";
+
+function App() {
+  const [name, setName] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [error, setError] = useState("");
+  const [submittedData, setSubmittedData] = useState([]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Validation
+    if (name.trim() === "" || feedback.trim() === "") {
+      setError("All fields are required!");
+      return;
+    }
+
+    setError("");
+
+    const newFeedback = {
+      id: Date.now(),
+      name,
+      feedback,
+    };
+
+    setSubmittedData([...submittedData, newFeedback]);
+
+    // Clear inputs
+    setName("");
+    setFeedback("");
+  };
+
+  return (
+    <div style={{ padding: "30px" }}>
+      <h1>Feedback Form</h1>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Enter your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        /><br /><br />
+
+        <textarea
+          placeholder="Enter your feedback"
+          value={feedback}
+          onChange={(e) => setFeedback(e.target.value)}
+        ></textarea><br /><br />
+
+        <button type="submit">Submit</button>
+      </form>
+
+      {/* Error Message */}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <h2>Submitted Feedback</h2>
+
+      {/* Display feedback dynamically */}
+      <ul>
+        {submittedData.map((item) => (
+          <li key={item.id}>
+            <strong>{item.name}:</strong> {item.feedback}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;

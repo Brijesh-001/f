@@ -1,0 +1,57 @@
+import React from "react";
+import "./App.css";
+
+// Profile Card Component
+function ProfileCard({ name, email, bio, image }) {
+  return (
+    <div className="card">
+      <img src={image} alt="user" className="profile-img" />
+
+      <h2>{name}</h2>
+      <p><strong>Email:</strong> {email}</p>
+      <p><strong>Bio:</strong> {bio}</p>
+    </div>
+  );
+}
+
+// Main App Component
+function App() {
+  return (
+    <div className="container">
+      <h1>User Profile Card</h1>
+
+      <ProfileCard
+        name="John Doe"
+        email="john.doe@example.com"
+        bio="Passionate software developer, React enthusiast, and UI designer."
+        image="https://via.placeholder.com/150"
+      />
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+.container {
+  text-align: center;
+  padding: 40px;
+}
+
+.card {
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: #f8f8f8;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.profile-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+}

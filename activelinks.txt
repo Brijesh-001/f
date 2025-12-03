@@ -1,0 +1,63 @@
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
+
+// Components for pages
+function Home() {
+  return <h2>Home Page</h2>;
+}
+
+function About() {
+  return <h2>About Page</h2>;
+}
+
+function Contact() {
+  return <h2>Contact Page</h2>;
+}
+
+// Navbar Component
+function Navbar() {
+  const linkStyles = ({ isActive }) => ({
+    marginRight: "20px",
+    textDecoration: "none",
+    color: isActive ? "blue" : "black",
+    fontWeight: isActive ? "bold" : "normal"
+  });
+
+  return (
+    <nav style={{ marginBottom: "20px" }}>
+      <NavLink to="/" style={linkStyles}>
+        Home
+      </NavLink>
+
+      <NavLink to="/about" style={linkStyles}>
+        About
+      </NavLink>
+
+      <NavLink to="/contact" style={linkStyles}>
+        Contact
+      </NavLink>
+    </nav>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <div style={{ padding: "20px" }}>
+        <h1>My Website</h1>
+
+        {/* Navigation Bar */}
+        <Navbar />
+
+        {/* Routes */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+export default App;

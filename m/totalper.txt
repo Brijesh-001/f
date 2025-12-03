@@ -1,0 +1,50 @@
+//-------------------------------------------
+// 1) CREATE / SWITCH TO DATABASE
+//-------------------------------------------
+use companyDB;
+
+
+//-------------------------------------------
+// 2) CREATE COLLECTION
+//-------------------------------------------
+db.createCollection("employees");
+
+
+//-------------------------------------------
+// 3) INSERT SAMPLE DATA
+//-------------------------------------------
+db.employees.insertMany([
+  { name: "Aarav", dept: "CSE", salary: 70000 },
+  { name: "Riya", dept: "CSE", salary: 85000 },
+  { name: "Mehul", dept: "CSE", salary: 65000 },
+
+  { name: "Aditi", dept: "ECE", salary: 90000 },
+  { name: "Tanya", dept: "ECE", salary: 75000 },
+  { name: "Harsh", dept: "ECE", salary: 82000 },
+
+  { name: "Karan", dept: "MECH", salary: 60000 },
+  { name: "Sarthak", dept: "MECH", salary: 72000 },
+  { name: "Neha", dept: "MECH", salary: 68000 }
+]);
+
+
+//-------------------------------------------
+// 4) AGGREGATION: TOTAL SALARY BY DEPARTMENT
+//-------------------------------------------
+print("\n--- TOTAL SALARY BY DEPARTMENT ---");
+
+db.employees.aggregate([
+  {
+    $group: {
+      _id: "$dept",
+      totalSalary: { $sum: "$salary" }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      department: "$_id",
+      totalSalary: 1
+    }
+  }
+]).forEach(doc => printjson(doc));

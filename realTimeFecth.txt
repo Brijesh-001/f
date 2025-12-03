@@ -1,0 +1,54 @@
+import React, { useState, useEffect } from "react";
+
+function App() {
+  const [employees, setEmployees] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filtered, setFiltered] = useState([]);
+
+  // Fetch API data
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => response.json())
+      .then((data) => {
+        setEmployees(data);
+        setFiltered(data); // initially show all employees
+      });
+  }, []);
+
+  // Realtime search filter
+  useEffect(() => {
+    const result = employees.filter((emp) =>
+      emp.name.toLowerCase().includes(search.toLowerCase())
+    );
+    setFiltered(result);
+  }, [search, employees]);
+
+  return (
+    <div style={{ padding: "30px" }}>
+      <h1>Employee Directory</h1>
+
+      {/* Search Bar */}
+      <input
+        type="text"
+        placeholder="Search employee by name..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{ padding: "10px", width: "250px" }}
+      />
+
+      <h2 style={{ marginTop: "20px" }}>Employee List</h2>
+
+      <ul>
+        {filtered.map((emp) => (
+          <li key={emp.id} style={{ marginBottom: "10px" }}>
+            <strong>{emp.name}</strong> <br />
+            Email: {emp.email} <br />
+            Phone: {emp.phone}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;

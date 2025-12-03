@@ -1,0 +1,68 @@
+import React, { useState } from "react";
+
+export default function App() {
+  const [city, setCity] = useState("");
+  const [weather, setWeather] = useState(null);
+  const [error, setError] = useState("");
+
+  const API_KEY = "a70f472668d7cca47e281aa9c5cf03ff";
+
+  const fetchWeather = async () => {
+    if (city.trim() === "") {
+      setError("Please enter a city name");
+      return;
+    }
+
+    setError("");
+    setWeather(null);
+
+    try {
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
+      );
+
+      if (!response.ok) {
+        setError("City not found");
+        return;
+      }
+
+      const data = await response.json();
+      setWeather(data);
+    } catch (err) {
+      setError("Error fetching weather");
+    }
+  };
+
+  return (
+    <div style={{ padding: 20, fontFamily: "Arial" }}>
+      <h2>Simple Weather App</h2>
+
+      <input
+        type="text"
+        placeholder="Enter city name"
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
+        style={{ padding: 8, width: 200, marginRight: 10 }}
+      />
+
+      <button onClick={fetchWeather} style={{ padding: "8px 15px" }}>
+        Get Weather
+      </button>
+
+      {error && (
+        <p style={{ color: "red", marginTop: 15 }}>{error}</p>
+      )}
+
+      {weather && (
+        <div style={{ marginTop: 20, border: "1px solid #ccc", padding: 15 }}>
+          <h3>{weather.name}, {weather.sys.country}</h3>
+          <p><b>Temperature:</b> {weather.main.temp}°C</p>
+          <p><b>Humidity:</b> {weather.main.humidity}%</p>
+          <p><b>Pressure:</b> {weather.main.pressure} hPa</p>
+          <p><b>Weather:</b> {weather.weather[0].description}</p>
+          <p><b>Wind Speed:</b> {weather.wind.speed} m/s</p>
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,69 @@
+import React, { useState, useEffect } from "react";
+
+function App() {
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState("");
+  const [expenses, setExpenses] = useState([]);
+  const [total, setTotal] = useState(0);
+
+  // Calculate total whenever expenses change
+  useEffect(() => {
+    const sum = expenses.reduce((acc, item) => acc + Number(item.amount), 0);
+    setTotal(sum);
+  }, [expenses]);
+
+  const addExpense = () => {
+    if (title.trim() === "" || amount === "") return;
+
+    const newExpense = {
+      id: Date.now(),
+      title,
+      amount
+    };
+
+    setExpenses([...expenses, newExpense]);
+
+    // clear inputs
+    setTitle("");
+    setAmount("");
+  };
+
+  const deleteExpense = (id) => {
+    setExpenses(expenses.filter((item) => item.id !== id));
+  };
+
+  return (
+    <div style={{ padding: "30px" }}>
+      <h1>Expense Tracker</h1>
+
+      <input
+        type="text"
+        placeholder="Expense Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+
+      <input
+        type="number"
+        placeholder="Amount"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+      />
+
+      <button onClick={addExpense}>Add Expense</button>
+
+      <h2>Total: ₹{total}</h2>
+
+      <ul>
+        {expenses.map((item) => (
+          <li key={item.id}>
+            {item.title} — ₹{item.amount}
+            <button onClick={() => deleteExpense(item.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;

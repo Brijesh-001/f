@@ -1,0 +1,51 @@
+ STEP 1 — Create / Use Database
+use studentDB
+
+ STEP 2 — Create Collection + Insert Sample Data
+
+(only if you haven’t already)
+
+db.students.insertMany([
+  { name: "Aarav", score: 85 },
+  { name: "Riya", score: 92 },
+  { name: "Manish", score: 78 },
+  { name: "Aditi", score: 88 },
+  { name: "Karan", score: 69 }
+])
+
+ STEP 3 — Find the AVERAGE Score
+
+Use aggregation:
+
+db.students.aggregate([
+  { $group: { _id: null, avgScore: { $avg: "$score" } } }
+])
+
+📌 Output example:
+{ "_id" : null, "avgScore" : 82.4 }
+
+STEP 4 — Store the average score in a variable (Mongo shell)
+
+This lets you use the average later.
+
+avg = db.students.aggregate([
+  { $group: { _id: null, avgScore: { $avg: "$score" } } }
+]).toArray()[0].avgScore
+
+
+Check:
+
+avg
+
+ STEP 5 — Print names of students who scored more than AVERAGE
+db.students.find(
+  { score: { $gt: avg } },
+  { _id: 0, name: 1, score: 1 }
+)
+
+📌 Output example:
+{ "name": "Riya", "score": 92 }
+{ "name": "Aditi", "score": 88 }
+
+🎉 You are DONE!
+Full process in Mongo shell:

@@ -1,0 +1,71 @@
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link, useParams } from "react-router-dom";
+
+// Sample product data
+const products = [
+  { id: 1, name: "Laptop", price: 60000, description: "High performance laptop" },
+  { id: 2, name: "Headphones", price: 2000, description: "Noise cancelling headphones" },
+  { id: 3, name: "Smartphone", price: 30000, description: "Latest model smartphone" },
+];
+
+// Product List Component
+function ProductList() {
+  return (
+    <div>
+      <h2>Product List</h2>
+
+      <ul>
+        {products.map((item) => (
+          <li key={item.id}>
+            {item.name} - ₹{item.price}
+            &nbsp;
+            <Link to={`/product/${item.id}`}>View Details</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// Product Details Component
+function ProductDetails() {
+  const { id } = useParams();
+  const product = products.find((item) => item.id === Number(id));
+
+  if (!product) {
+    return <h2>Product Not Found</h2>;
+  }
+
+  return (
+    <div>
+      <h2>{product.name}</h2>
+      <p>Price: ₹{product.price}</p>
+      <p>Description: {product.description}</p>
+
+      <Link to="/">Back to Products</Link>
+    </div>
+  );
+}
+
+// Main App Component
+function App() {
+  return (
+    <Router>
+      <div style={{ padding: "20px" }}>
+        <h1>Product Store</h1>
+
+        {/*  ADDING NAVIGATION HERE  */}
+        <nav style={{ marginBottom: "20px" }}>
+          <Link to="/">Home</Link>
+        </nav>
+
+        <Routes>
+          <Route path="/" element={<ProductList />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+export default App;

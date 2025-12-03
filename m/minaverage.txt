@@ -1,0 +1,76 @@
+//-------------------------------------------
+// 1) CREATE / SWITCH TO DATABASE
+//-------------------------------------------
+use collegeDB;
+
+
+//-------------------------------------------
+// 2) CREATE COLLECTIONS
+//-------------------------------------------
+db.createCollection("teachers");
+db.createCollection("students");
+
+
+//-------------------------------------------
+// 3) INSERT SAMPLE DATA
+//-------------------------------------------
+
+// TEACHERS
+db.teachers.insertMany([
+  { name: "Rohit", dept: "CSE", salary: 55000 },
+  { name: "Priya", dept: "CSE", salary: 60000 },
+  { name: "Amit",  dept: "ECE", salary: 52000 },
+  { name: "Tanya", dept: "ECE", salary: 58000 },
+  { name: "Neha",  dept: "MECH", salary: 49000 }
+]);
+
+// STUDENTS
+db.students.insertMany([
+  { name: "Aarav",  branch: "CSE", marks: 85 },
+  { name: "Riya",   branch: "CSE", marks: 92 },
+  { name: "Manish", branch: "ECE", marks: 78 },
+  { name: "Aditi",  branch: "ECE", marks: 88 },
+  { name: "Karan",  branch: "MECH", marks: 69 }
+]);
+
+
+//-------------------------------------------
+// 4) AVERAGE SALARY OF TEACHERS BY DEPARTMENT
+//-------------------------------------------
+print("\n--- AVERAGE SALARY OF TEACHERS BY DEPARTMENT ---");
+db.teachers.aggregate([
+  {
+    $group: {
+      _id: "$dept",
+      averageSalary: { $avg: "$salary" }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      department: "$_id",
+      averageSalary: 1
+    }
+  }
+]).forEach(doc => printjson(doc));
+
+
+//-------------------------------------------
+// 5) AVERAGE MARKS OF STUDENTS BY BRANCH
+//-------------------------------------------
+print("\n--- AVERAGE MARKS OF STUDENTS BY BRANCH ---");
+db.students.aggregate([
+  {
+    $group: {
+      _id: "$branch",
+      averageMarks: { $avg: "$marks" }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      branch: "$_id",
+      averageMarks: 1
+    }
+  }
+]).forEach(doc => printjson(doc));

@@ -1,0 +1,50 @@
+//-------------------------------------------
+// 1) CREATE / SWITCH TO DATABASE
+//-------------------------------------------
+use employeeDB;
+
+
+//-------------------------------------------
+// 2) CREATE COLLECTION
+//-------------------------------------------
+db.createCollection("employees");
+
+
+//-------------------------------------------
+// 3) INSERT SAMPLE DATA
+//-------------------------------------------
+db.employees.insertMany([
+  { name: "Aarav", city: "Mumbai",  language: "Java",    salary: 70000 },
+  { name: "Riya",  city: "Mumbai",  language: "Python",  salary: 65000 },
+  { name: "Karan", city: "Mumbai",  language: "Java",    salary: 80000 },
+
+  { name: "Aditi", city: "Delhi",   language: "Python",  salary: 90000 },
+  { name: "Tanya", city: "Delhi",   language: "Java",    salary: 75000 },
+  { name: "Harsh", city: "Delhi",   language: "Python",  salary: 82000 },
+
+  { name: "Neha",  city: "Pune",    language: "Java",    salary: 60000 },
+  { name: "Sarthak", city: "Pune",  language: "Python",  salary: 72000 }
+]);
+
+
+//-------------------------------------------
+// 4) AGGREGATION: AVG SALARY GROUPED BY CITY + LANGUAGE
+//-------------------------------------------
+print("\n--- AVERAGE SALARY BY CITY AND LANGUAGE ---");
+
+db.employees.aggregate([
+  {
+    $group: {
+      _id: { city: "$city", language: "$language" },
+      averageSalary: { $avg: "$salary" }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      city: "$_id.city",
+      language: "$_id.language",
+      averageSalary: 1
+    }
+  }
+]).forEach(doc => printjson(doc));

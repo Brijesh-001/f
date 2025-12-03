@@ -1,0 +1,76 @@
+import React, { useState } from "react";
+
+function App() {
+  const [task, setTask] = useState("");
+  const [tasks, setTasks] = useState([]);
+
+  // Add Task
+  const addTask = () => {
+    if (task.trim() === "") return;
+
+    const newTask = {
+      id: Date.now(),
+      text: task,
+      completed: false,
+    };
+
+    setTasks([...tasks, newTask]);
+    setTask(""); // clear input
+  };
+
+  // Mark task as done
+  const toggleComplete = (id) => {
+    setTasks(
+      tasks.map((item) =>
+        item.id === id ? { ...item, completed: !item.completed } : item
+      )
+    );
+  };
+
+  // Delete task
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((item) => item.id !== id));
+  };
+
+  return (
+    <div style={{ padding: "30px" }}>
+      <h1>To-Do Manager</h1>
+
+      <input
+        type="text"
+        placeholder="Enter a task"
+        value={task}
+        onChange={(e) => setTask(e.target.value)}
+      />
+
+      <button onClick={addTask}>Add Task</button>
+
+      <h2>Tasks</h2>
+
+      <ul>
+        {tasks.map((item) => (
+          <li key={item.id}>
+            <span
+              style={{
+                textDecoration: item.completed ? "line-through" : "none",
+                marginRight: "10px",
+              }}
+            >
+              {item.text}
+            </span>
+
+            <button onClick={() => toggleComplete(item.id)}>
+              {item.completed ? "Undo" : "Done"}
+            </button>
+
+            <button onClick={() => deleteTask(item.id)} style={{ marginLeft: "10px" }}>
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
